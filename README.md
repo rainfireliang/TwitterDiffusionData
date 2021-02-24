@@ -1,3 +1,3 @@
 # TwitterDiffusionData
 
-Instruction and more dataset are coming soon.
+Instruction and more datasets are coming soon.
