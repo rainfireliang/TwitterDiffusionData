@@ -1,4 +1,4 @@
-setwd("D:/MISC/Random Tweets/Data and Analyses")
+setwd("~")
 options(scipen = 999)
 
 library(dplyr)
@@ -109,29 +109,4 @@ diffNet=merge(diffNet,diffD[,c('idds','depth')],by='idds')
 diffNet=diffNet[order(diffNet$tid,diffNet$time),]
 save(diffNet,file='diffNet.Rdata')
 
-###
-load("diffNet.Rdata")
-load("UserInf.Rdata")
 
-diffNet = diffNet[diffNet$sharers!=diffNet$seed_user&diffNet$depth>0,]#21188
-diffNet$idds =NULL
-
-userInf$id_str = paste(userInf$id_str)
-diff_data = merge(diffNet, userInf[,c("id_str","followers_count","friends_count","location")],by.x="sharers",by.y = 'id_str',all.x=T)
-diff_data = merge(diff_data, userInf[,c("id_str","followers_count","friends_count","location")],by.x="seed_user",by.y = 'id_str',all.x=T)
-
-diff_data = diff_data[,c("tid","sharers","seed_user","time","n",'depth',"followers_count.x","friends_count.x","location.x","followers_count.y","friends_count.y","location.y")]
-colnames(diff_data) = gsub(".x",".sharers",colnames(diff_data))
-colnames(diff_data) = gsub(".y",".seed",colnames(diff_data))
-diff_data = diff_data[order(diff_data$tid,diff_data$time),]
-save(diff_data,file = "diff_data.Rdata") #data in use
-
-
-####
-
-diff_data$s_d = ifelse(diff_data$followers_count.seed>diff_data$followers_count.sharers,1,0)
-
-diff_data$s_d = (diff_data$followers_count.seed-diff_data$followers_count.sharers)/diff_data$followers_count.sharers
-
-x = diff_data %>% dplyr::group_by(depth) %>% dplyr::summarise(n=median(s_d,na.rm = T))
-x$p = x$n/x$m
