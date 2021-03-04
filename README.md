@@ -1,4 +1,4 @@
-# TwitterDiffusionData
+# Twitter Diffusion Data
 
 Instruction and additional code files are coming soon.
 
