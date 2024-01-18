@@ -6,7 +6,26 @@ library(tidyr)
 library(dplyr)
 
 #######
-load("data_model.Rdata")
+load("data_model.Rdata") # the data for models and figures.
+
+## Fit the mixed models using the following code
+# fm_t[[1]] = glmer(selected ~ inter_s + nexpose_s + sim_s + depth_s + t + 
+#                     (1 | tid) +  
+#                     (1 | seed_user) + 
+#                     (0 + inter_s | tid) + 
+#                     (0 + inter_s | seed_user) +      
+#                     (0 + nexpose_s | tid) + 
+#                     (0 + nexpose_s | seed_user) + 
+#                     (0 + sim_s | tid) + 
+#                     (0 + sim_s | seed_user), 
+#                   data = data,
+#                   family = binomial(link = 'logit'),control=glmerControl(optimizer = "bobyqa",optCtrl=list(maxfun=2e5)))
+# fm_t[[2]] = update(fm_t[[1]],.~.+inter_s*depth_s+sim_s*depth_s+nexpose_s*depth_s+reciprocity*depth_s+sr_s*depth_s) 
+# fm_t[[3]] = update(fm_t[[2]],.~.+rtb_s+fr.seed+fl.seed+st.seed+tn.seed+fr.sharers+fl.sharers+st.sharers+tn.sharers)
+
+## To replicate the tables & figures, please download the fitted model (fm_t.rds) here (too large to upload on GitHub):  
+## https://www.dropbox.com/scl/fi/d2zbfgvoj5c8w417m9uzn/fm_t.rds?rlkey=5ermpufm8ixlyldrvl6j29yrk&dl=0
+## fm_t = readRDS("fm_t.rds")
 
 fm1 = update(fm_t[[1]],.~.+p_inter_s+p_nexpose_s+p_sim_s+t_inter_s+t_nexpose_s+t_sim_s,data=data)
 fm2 = update(fm_t[[2]],.~.+p_inter_s+p_nexpose_s+p_sim_s+t_inter_s+t_nexpose_s+t_sim_s,data=data)
